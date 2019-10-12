@@ -1,0 +1,172 @@
+/*
+ * DTS file for Phytium FT-1500A SoC
+ *
+ * Copyright (C) 2015, Phytium Technology Co., Ltd.
+ *
+ * This file is licensed under a dual GPLv2 or BSD license.
+ */
+
+/memreserve/    0x80000000 0x100000;
+/ {
+ compatible = "phytium,ft-1500a";
+ interrupt-parent = <&gic>;
+ #address-cells = <2>;
+ #size-cells = <2>;
+
+ aliases {
+ ethernet0 = &gmac0;
+ ethernet1 = &gmac1;
+ };
+
+ cpus {
+ #address-cells = <2>;
+ #size-cells = <0>;
+
+ cpu@0 {
+ device_type = "cpu";
+ compatible = "arm,armv8";
+ reg = <0x0 0x000>;
+ enable-method = "spin-table";
+ cpu-release-addr = <0x0 0x8007fff0>;
+ };
+
+ cpu@1 {
+ device_type = "cpu";
+ compatible = "arm,armv8";
+ reg = <0x0 0x001>;
+ enable-method = "spin-table";
+ cpu-release-addr = <0x0 0x8007fff0>;
+ };
+
+ cpu@2 {
+ device_type = "cpu";
+ compatible = "arm,armv8";
+ reg = <0x0 0x002>;
+ enable-method = "spin-table";
+ cpu-release-addr = <0x0 0x8007fff0>;
+ };
+
+ cpu@3 {
+ device_type = "cpu";
+ compatible = "arm,armv8";
+ reg = <0x0 0x003>;
+ enable-method = "spin-table";
+ cpu-release-addr = <0x0 0x8007fff0>;
+ };
+
+ };
+
+ gic: interrupt-controller@29800000 {
+ compatible = "arm,gic-v3";
+ #interrupt-cells = <3>;
+ #address-cells = <2>;
+ #size-cells = <2>;
+ ranges;
+ interrupt-controller;
+ reg = <0x0 0x29800000 0 0x10000>, /* GICD */
+      <0x0 0x29a00000 0 0x200000>, /* GICR */
+      <0x0 0x29c00000 0 0x10000>, /* GICC */
+      <0x0 0x29c10000 0 0x10000>, /* GICH */
+      <0x0 0x29c20000 0 0x10000>; /* GICV */
+ interrupts = <1 9 4>;
+
+ its: gic-its@29820000 {
+ compatible = "arm,gic-v3-its";
+ msi-controller;
+ reg = <0x0 0x29820000 0x0 0x20000>;
+ };
+ };
+
+ timer {
+ compatible = "arm,armv8-timer";
+ interrupts = <1 13 8>,
+     <1 14 8>,
+     <1 11 8>,
+     <1 10 8>;
+ clock-frequency = <50000000>;
+ };
+
+ soc {
+ compatible = "arm,amba-bus", "simple-bus";
+ #address-cells = <2>;
+ #size-cells = <2>;
+ ranges;
+
+ gmac_clk: clk_csr {
+ compatible = "fixed-clock";
+ #clock-cells = <0>;
+ clock-frequency = <250000000>;
+ };
+
+ uart0: serial@28000000 {
+ compatible = "snps,dw-apb-uart";
+ reg = <0x0 0x28000000 0x0 0x1000>;
+ clock-frequency = <50000000>;
+ interrupts = <0 34 4>;
+ reg-shift = <2>;
+ reg-io-width = <4>;
+ };
+
+ uart1: serial@28001000 {
+ compatible = "snps,dw-apb-uart";
+ reg = <0x0 0x28001000 0x0 0x1000>;
+ clock-frequency = <50000000>;
+ interrupts = <0 35 4>;
+ reg-shift = <2>;
+ reg-io-width = <4>;
+ };
+
+ gmac0: ethernet@28c00000 {
+ compatible = "snps,dwmac";
+ reg = <0 0x28c00000 0x0 0x2000>;
+ interrupts = <0 44 4>;
+ interrupt-names = "macirq";
+ clocks = <&gmac_clk>;
+ clock-names = "stmmaceth";
+ snps,pbl = <16>;
+ snps,abl = <32>;
+ snps,fixed-burst;
+ snps,force_sf_dma_mode;
+ snps,multicast-filter-bins = <64>;
+ snps,perfect-filter-entries = <1>;
+ max-frame-size = <9000>;
+ status = "disable";
+ };
+
+ gmac1: ethernet@28c02000 {
+ compatible = "snps,dwmac";
+ reg = <0 0x28c02000 0x0 0x2000>;
+ interrupts = <0 45 4>;
+ interrupt-names = "macirq";
+ clocks = <&gmac_clk>;
+ clock-names = "stmmaceth";
+ snps,pbl = <16>;
+ snps,abl = <32>;
+ snps,fixed-burst;
+ snps,force_sf_dma_mode;
+ snps,multicast-filter-bins = <64>;
+ snps,perfect-filter-entries = <1>;
+ max-frame-size = <9000>;
+ status = "disable";
+ };
+
+ pcie0: pcie-controller {
+ compatible = "pci-host-ecam-generic";
+ device_type = "pci";
+ #address-cells = <3>;
+ #size-cells = <2>;
+ #interrupt-cells = <1>;
+ reg = <0 0x40000000 0 0x10000000>;
+ dma-coherent;
+ msi-parent = <&its>;
+ interrupt-map-mask = <0x0000 0x0 0x0 0x7>;
+ interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0x0 0x0 0x33 0x4>,
+ <0x0 0x0 0x0 0x2 &gic 0x0 0x0 0x0 0x34 0x4>,
+ <0x0 0x0 0x0 0x3 &gic 0x0 0x0 0x0 0x35 0x4>,
+ <0x0 0x0 0x0 0x4 &gic 0x0 0x0 0x0 0x36 0x4>;
+ ranges = <0x01000000 0x00 0x00000000 0x00 0x50000000 0x00 0x1000000>,
+ <0x02000000 0x00 0x60000000 0x00 0x60000000 0x00 0x20000000>,
+ <0x03000000 0x01 0x00000000 0x01 0x00000000 0x01 0x00000000>;
+ };
+ };
+};

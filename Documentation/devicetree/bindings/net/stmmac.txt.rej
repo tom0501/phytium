@@ -1,0 +1,10 @@
+--- Documentation/devicetree/bindings/net/stmmac.txt
++++ Documentation/devicetree/bindings/net/stmmac.txt
+@@ -43,6 +43,7 @@ Optional properties:
+   available this clock is used for programming the Timestamp Addend Register.
+   If not passed then the system clock will be used and this is fine on some
+   platforms.
++- snps,abl: AXI Burst Length
+ 
+ Examples:
+ 

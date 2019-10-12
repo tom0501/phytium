@@ -1,0 +1,39 @@
+/*
+ * DTS file for Phytium FT1500A-V2-DSK-V2 board
+ *
+ * Copyright (C) 2015, Phytium Technology Co., Ltd.
+ *
+ * This file is licensed under a dual GPLv2 or BSD license.
+ */
+
+/dts-v1/;
+
+/include/ "ft-1500a4.dtsi"
+
+/ {
+ model = "Phytium FT1500a 4C PC v1.2 GreatWall Galaxy OEM";
+ compatible = "phytium,ft-1500a";
+
+ chosen {
+ linux,pci-probe-only;
+ };
+
+ memory {
+ device_type = "memory";
+ reg = <0x0 0x80000000 0x0 0x80000000>; /* Updated by bootloader */
+ };
+};
+
+&uart1 {
+ status = "ok";
+};
+
+&gmac0 {
+ phy-mode = "gmii";
+ status = "ok";
+};
+
+&gmac1 {
+ phy-mode = "gmii";
+ status = "ok";
+};

@@ -1,0 +1,9 @@
+--- arch/arm64/boot/dts/Makefile
++++ arch/arm64/boot/dts/Makefile
+@@ -2,5 +2,6 @@ dts-dirs += amd
+ dts-dirs += apm
+ dts-dirs += arm
+ dts-dirs += cavium
++dts-dirs += phytium
+ 
+ subdir-y := $(dts-dirs)

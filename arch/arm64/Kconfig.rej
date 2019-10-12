@@ -1,0 +1,14 @@
+--- arch/arm64/Kconfig
++++ arch/arm64/Kconfig
+@@ -153,6 +153,11 @@ config ARCH_SEATTLE
+  help
+   This enables support for AMD Seattle SOC Family
+ 
++config ARCH_PHYTIUM
++ bool "Phytium FT SoC Family"
++ help
++  This enables support for Phytium FT SoC Family.
++
+ config ARCH_THUNDER
+  bool "Cavium Inc. Thunder SoC Family"
+  help
